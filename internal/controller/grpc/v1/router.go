@@ -1,9 +1,10 @@
 package v1
 
 import (
-	v1 "github.com/evrone/go-clean-template/docs/proto/v1"
-	"github.com/evrone/go-clean-template/internal/usecase"
-	"github.com/evrone/go-clean-template/pkg/logger"
+	"go-clean-template/internal/controller/http/v1"
+	"go-clean-template/internal/usecase"
+	"go-clean-template/pkg/logger"
+
 	"github.com/go-playground/validator/v10"
 	pbgrpc "google.golang.org/grpc"
 )
@@ -14,5 +15,14 @@ func NewTranslationRoutes(app *pbgrpc.Server, t usecase.Translation, l logger.In
 
 	{
 		v1.RegisterTranslationServer(app, r)
+	}
+}
+
+func NewRouter(r *gin.Engine, pegawaiUC usecase.PegawaiUsecase) {
+	h := handler.NewPegawaiHandler(pegawaiUC)
+
+	v1 := r.Group("/v1")
+	{
+		v1.GET("/pegawai", h.GetAll)
 	}
 }
